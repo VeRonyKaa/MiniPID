@@ -1,0 +1,108 @@
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+bool hasSwitched = false;
+bool patternIndex = 0;
+
+int angryPin = 10;
+int scaredPin = 9;
+int neutralPin = 8;
+int sadPin = 7;
+int happyPin = 6;
+
+int redPin = 13;
+int greenPin = 0;
+int bluePin = 1;
+
+void setup() {
+  lcd.begin(16, 2);
+  
+  pinMode(angryPin, INPUT);
+  pinMode(scaredPin, INPUT);
+  pinMode(neutralPin, INPUT);
+  pinMode(sadPin, INPUT);
+  pinMode(happyPin, INPUT);
+  
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  
+  bool angryInput = digitalRead(angryPin);
+  bool scaredInput = digitalRead(scaredPin);
+  bool neutralInput = digitalRead(neutralPin);
+  bool sadInput = digitalRead(sadPin);
+  bool happyInput = digitalRead(happyPin);
+  
+  lcd.setCursor(0, 0);
+  if (angryInput){
+    lcd.print("angry  ");
+    SetLED(255, 0, 0);		// RED
+  }
+  
+  if (scaredInput){
+    lcd.print("scared ");
+    SetLED(255, 255, 0);	// YELLOW
+  }
+  
+  if (neutralInput){
+    lcd.print("neutral");
+    SetLED(255, 255, 255);	//GRAY
+  }
+  
+  if (sadInput){
+    lcd.print("sad    ");
+    SetLED(30, 30, 255);	//BLUE
+  }
+  
+  if (happyInput){
+    lcd.print("happy  ");
+    SetLED(30, 255, 30);	// GREEN
+  }
+  
+  /*
+  bool buttonInput = digitalRead(10);
+  
+  lcd.setCursor(0, 1);
+  
+  if (buttonInput)
+  	lcd.print("true  ");
+  else
+    lcd.print("false");
+  */
+  
+  //int oldHallValue = hallValue;
+  //int oldFlexValue = flexValue;
+  
+  int hallValue = analogRead(0);
+  int flexValue = analogRead(1);
+  
+  
+  if (hallValue > 512 && flexValue > 512){
+    patternIndex = 0;
+  }
+  else{
+  	patternIndex = 1;
+  }
+  
+  if (patternIndex == 0){
+    lcd.setCursor(0, 1);
+  	lcd.print("HOSPITAL");
+  }
+  else{
+  	lcd.setCursor(0, 1);
+  	lcd.print("HOME    ");
+  }
+}
+
+void SetLED(int red, int green, int blue){
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+}
+
+
+
